@@ -1,4 +1,5 @@
 import { supabase } from "./supabase";
+import { notFound } from "next/navigation";
 import { eachDayOfInterval } from "date-fns";
 import type { Cabin, Guest, Booking, Settings, Country } from "./types";
 import {
@@ -13,7 +14,7 @@ import {
 /////////////
 // GET
 
-export async function getCabin(id: number): Promise<Cabin | null> {
+export async function getCabin(id: number): Promise<Cabin> {
   const { data, error } = await supabase
     .from("cabins")
     .select("*")
@@ -25,6 +26,7 @@ export async function getCabin(id: number): Promise<Cabin | null> {
 
   if (error) {
     console.error(error);
+    notFound();
   }
 
   return data;
