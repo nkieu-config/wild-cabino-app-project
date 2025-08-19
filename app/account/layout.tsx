@@ -1,6 +1,6 @@
 import SideNavigation from "@/app/_components/SideNavigation";
 
-function Layout({ children }) {
+function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="grid h-full grid-cols-[16rem_1fr] gap-12">
       <SideNavigation />
