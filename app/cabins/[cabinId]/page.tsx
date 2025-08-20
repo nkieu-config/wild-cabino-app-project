@@ -6,11 +6,13 @@ import Spinner from "@/app/_components/Spinner";
 import Cabins from "@/app/_components/Cabins";
 
 type PageProps = {
-  params: Promise<{ cabinId: number }>;
+  params: {
+    cabinId: string;
+  };
 };
 
 export async function generateMetadata({ params }: PageProps) {
-  const { cabinId } = await params;
+  const { cabinId } = params;
   const { name } = await getCabin(Number(cabinId));
   return { title: `Cabin ${name}` };
 }
@@ -21,8 +23,8 @@ export async function generateStaticParams() {
 }
 
 export default async function Page({ params }: PageProps) {
-  const { cabinId } = await params;
-  const cabin = await getCabin(cabinId);
+  const { cabinId } = params;
+  const cabin = await getCabin(Number(cabinId));
 
   return (
     <div className="mx-auto mt-8 max-w-6xl">
