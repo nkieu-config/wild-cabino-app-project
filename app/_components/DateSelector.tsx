@@ -1,9 +1,10 @@
 "use client";
 
-import { isWithinInterval } from "date-fns";
-import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
+import { isWithinInterval } from "date-fns";
+import { DayPicker, DateRange } from "react-day-picker";
 import { Cabin, Settings } from "@/app/_lib/types";
+import { useReservation } from "./ReservationContext";
 
 interface DateSelectorProps {
   settings: Settings;
@@ -11,23 +12,23 @@ interface DateSelectorProps {
   bookedDates: Date[];
 }
 
-function isAlreadyBooked(range, datesArr) {
+function isAlreadyBooked(range: DateRange | undefined, datesArr: Date[]) {
   return (
-    range.from &&
-    range.to &&
+    range?.from &&
+    range?.to &&
     datesArr.some((date) =>
-      isWithinInterval(date, { start: range.from, end: range.to }),
+      isWithinInterval(date, { start: range.from!, end: range.to! }),
     )
   );
 }
 
 function DateSelector({ settings, bookedDates, cabin }: DateSelectorProps) {
+  const { range, setRange, resetRange } = useReservation();
   // CHANGE
   const regularPrice = 23;
   const discount = 23;
   const numNights = 23;
   const cabinPrice = 23;
-  const range = { from: null, to: null };
 
   // SETTINGS
   const { minBookingLength, maxBookingLength } = settings;
@@ -37,6 +38,8 @@ function DateSelector({ settings, bookedDates, cabin }: DateSelectorProps) {
       <DayPicker
         className="place-self-center pt-12"
         mode="range"
+        selected={range}
+        onSelect={setRange}
         min={minBookingLength + 1}
         max={maxBookingLength}
         fromMonth={new Date()}
@@ -74,10 +77,10 @@ function DateSelector({ settings, bookedDates, cabin }: DateSelectorProps) {
           ) : null}
         </div>
 
-        {range.from || range.to ? (
+        {range?.from || range?.to ? (
           <button
             className="border-primary-800 border px-4 py-2 text-sm font-semibold"
-            onClick={() => resetRange()}
+            onClick={resetRange}
           >
             Clear
           </button>
