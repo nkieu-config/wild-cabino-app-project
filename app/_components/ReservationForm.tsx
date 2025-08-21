@@ -1,35 +1,40 @@
 "use client";
 
+import type { User } from "next-auth";
 import { Cabin } from "@/app/_lib/types";
 import { useReservation } from "./ReservationContext";
+import Image from "next/image";
 
-function ReservationForm({ cabin }: { cabin: Cabin }) {
+interface ReservationFormProps {
+  cabin: Cabin;
+  user: User;
+}
+
+function ReservationForm({ cabin, user }: ReservationFormProps) {
   const { range } = useReservation();
   const { maxCapacity } = cabin;
 
   return (
     <div className="scale-[1.01]">
-      <div className="bg-primary-800 text-primary-300 flex items-center justify-between px-16 py-2">
+      <div className="bg-primary-800 text-primary-300 flex items-center justify-between px-16 py-4">
         <p>Logged in as</p>
 
-        {/* <div className='flex gap-4 items-center'>
-          <img
-            // Important to display google profile images
-            referrerPolicy='no-referrer'
-            className='h-8 rounded-full'
-            src={user.image}
-            alt={user.name}
-          />
+        <div className="flex items-center gap-4">
+          <div className="relative h-8 w-8">
+            <Image
+              referrerPolicy="no-referrer"
+              className="rounded-full object-cover"
+              fill
+              src={user.image ?? "/default-avatar.png"}
+              alt={user.name ?? "Guest avatar"}
+            />
+          </div>
           <p>{user.name}</p>
-        </div> */}
+        </div>
       </div>
 
-      <p>
-        {String(range?.from)} to {String(range?.to)}
-      </p>
-
-      <form className="bg-primary-900 flex flex-col gap-5 px-16 py-10 text-lg">
-        <div className="space-y-2">
+      <form className="bg-primary-900 flex flex-col gap-6 px-16 py-15 text-lg">
+        <div className="flex flex-col gap-1 space-y-2">
           <label htmlFor="numGuests">How many guests?</label>
           <select
             name="numGuests"
@@ -48,7 +53,7 @@ function ReservationForm({ cabin }: { cabin: Cabin }) {
           </select>
         </div>
 
-        <div className="space-y-2">
+        <div className="flex flex-col gap-1 space-y-2">
           <label htmlFor="observations">
             Anything we should know about your stay?
           </label>
