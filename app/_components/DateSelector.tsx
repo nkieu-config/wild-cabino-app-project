@@ -47,6 +47,7 @@ function DateSelector({ settings, bookedDates, cabin }: DateSelectorProps) {
         toYear={new Date().getFullYear() + 5}
         captionLayout="dropdown"
         numberOfMonths={2}
+        hideNavigation
       />
 
       <div className="bg-accent-500 text-primary-800 flex h-[72px] items-center justify-between px-8">
