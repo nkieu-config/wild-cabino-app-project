@@ -21,7 +21,7 @@ function Cabins({ cabin }: { cabin: Cabin }) {
       </div>
 
       <div>
-        <h3 className="text-accent-100 bg-primary-950 mb-5 w-[150%] translate-x-[-254px] p-6 pb-1 text-7xl font-black">
+        <h3 className="text-accent-100 bg-primary-950 mb-5 w-[140%] translate-x-[-254px] p-6 pb-1 text-7xl font-black">
           Cabin {name}
         </h3>
 

@@ -27,7 +27,7 @@ export default async function Page({ params }: PageProps) {
   const cabin = await getCabin(Number(cabinId));
 
   return (
-    <div className="mx-auto mt-8 max-w-6xl">
+    <div className="mx-auto mt-8 max-w-7xl">
       <Cabins cabin={cabin} />
 
       <div>
