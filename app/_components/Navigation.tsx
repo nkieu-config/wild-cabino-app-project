@@ -32,6 +32,7 @@ async function Navigation() {
                   className="rounded-full object-cover"
                   src={session.user.image}
                   fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   alt={session.user.name ?? "Guest avatar"}
                   referrerPolicy="no-referrer"
                 />
