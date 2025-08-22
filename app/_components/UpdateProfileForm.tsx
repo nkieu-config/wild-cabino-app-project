@@ -1,20 +1,30 @@
 "use client";
 
 import { useState } from "react";
+import { Guest } from "@/app/_lib/types";
+import { updateGuest } from "@/app/_lib/actions";
+import Image from "next/image";
 
-function UpdateProfileForm({ children }: { children: React.ReactNode }) {
+interface UpdateProfileFormProps {
+  children: React.ReactNode;
+  guest: Guest;
+}
+
+function UpdateProfileForm({ children, guest }: UpdateProfileFormProps) {
   const [count, setCount] = useState();
 
-  // CHANGE
-  const countryFlag = "pt.jpg";
-  const nationality = "portugal";
+  const { fullName, email, nationality, nationalID, countryFlag } = guest;
 
   return (
-    <form className="bg-primary-900 flex flex-col gap-6 px-12 py-8 text-lg">
+    <form
+      action={updateGuest}
+      className="bg-primary-900 flex flex-col gap-6 px-12 py-8 text-lg"
+    >
       <div className="space-y-2">
         <label>Full name</label>
         <input
           disabled
+          defaultValue={fullName || ""}
           className="bg-primary-200 text-primary-800 w-full rounded-sm px-5 py-3 shadow-sm disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400"
         />
       </div>
@@ -23,6 +33,7 @@ function UpdateProfileForm({ children }: { children: React.ReactNode }) {
         <label>Email address</label>
         <input
           disabled
+          defaultValue={email || ""}
           className="bg-primary-200 text-primary-800 w-full rounded-sm px-5 py-3 shadow-sm disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400"
         />
       </div>
@@ -30,11 +41,14 @@ function UpdateProfileForm({ children }: { children: React.ReactNode }) {
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <label htmlFor="nationality">Where are you from?</label>
-          <img
-            src={countryFlag}
-            alt="Country flag"
-            className="h-5 rounded-sm"
-          />
+          <div className="relative h-5 w-8">
+            <Image
+              src={countryFlag || "/default-flag.jpg"}
+              alt="Country flag"
+              fill
+              className="rounded-sm object-contain"
+            />
+          </div>
         </div>
         {children}
       </div>
@@ -43,6 +57,7 @@ function UpdateProfileForm({ children }: { children: React.ReactNode }) {
         <label htmlFor="nationalID">National ID number</label>
         <input
           name="nationalID"
+          defaultValue={nationalID || ""}
           className="bg-primary-200 text-primary-800 w-full rounded-sm px-5 py-3 shadow-sm"
         />
       </div>
