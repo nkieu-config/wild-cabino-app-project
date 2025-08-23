@@ -5,12 +5,17 @@ import { BookingWithCabin } from "@/app/_lib/types";
 import DeleteReservation from "./DeleteReservation";
 import Link from "next/link";
 
+interface ReservationCardProps {
+  booking: BookingWithCabin;
+  onDelete: (bookingId: number) => Promise<void>;
+}
+
 export const formatDistanceFromNow = (dateStr: string) =>
   formatDistance(parseISO(dateStr), new Date(), {
     addSuffix: true,
   }).replace("about ", "");
 
-function ReservationCard({ booking }: { booking: BookingWithCabin }) {
+function ReservationCard({ booking, onDelete }: ReservationCardProps) {
   const {
     id,
     guestId,
@@ -83,7 +88,7 @@ function ReservationCard({ booking }: { booking: BookingWithCabin }) {
               <PencilSquareIcon className="text-primary-600 group-hover:text-primary-800 h-5 w-5 transition-colors" />
               <span className="mt-1">Edit</span>
             </Link>
-            <DeleteReservation bookingId={id} />
+            <DeleteReservation bookingId={id} onDelete={onDelete} />
           </>
         ) : null}
       </div>
