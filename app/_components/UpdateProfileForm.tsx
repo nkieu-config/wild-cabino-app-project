@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { useFormStatus } from "react-dom";
 import { Guest } from "@/app/_lib/types";
 import { updateGuest } from "@/app/_lib/actions";
 import Image from "next/image";
+import SubmitButton from "./SubmitButton";
 
 interface UpdateProfileFormProps {
   children: React.ReactNode;
@@ -12,8 +11,6 @@ interface UpdateProfileFormProps {
 }
 
 function UpdateProfileForm({ children, guest }: UpdateProfileFormProps) {
-  const [count, setCount] = useState();
-
   const { fullName, email, nationality, nationalID, countryFlag } = guest;
 
   return (
@@ -64,22 +61,9 @@ function UpdateProfileForm({ children, guest }: UpdateProfileFormProps) {
       </div>
 
       <div className="flex items-center justify-end gap-6">
-        <Button />
+        <SubmitButton pendingLabel="Updating...">Update profile</SubmitButton>
       </div>
     </form>
-  );
-}
-
-function Button() {
-  const { pending } = useFormStatus();
-
-  return (
-    <button
-      className="bg-accent-500 text-primary-800 hover:bg-accent-600 px-8 py-4 font-semibold transition-all disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300"
-      disabled={pending}
-    >
-      {pending ? "Updating..." : "Update profile"}
-    </button>
   );
 }
 

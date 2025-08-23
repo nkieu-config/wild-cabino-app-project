@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { auth, signIn, signOut } from "./auth";
 import { supabase } from "./supabase";
 import { getBookings } from "./data-service";
+import { redirect } from "next/navigation";
 
 export async function updateGuest(formData: FormData) {
   const session = await auth();
@@ -19,7 +20,7 @@ export async function updateGuest(formData: FormData) {
 
   const updateData = { nationality, countryFlag, nationalID };
 
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("guests")
     .update(updateData)
     .eq("id", session.user.guestId);
@@ -47,6 +48,46 @@ export async function deleteReservation(bookingId: number) {
   if (error) throw new Error("Booking could not be deleted");
 
   revalidatePath("/account/reservations"); // delete cache
+}
+
+export async function updateBooking(formData: FormData) {
+  const bookingId = Number(formData.get("bookingId"));
+
+  // 1) Authentication
+  const session = await auth();
+  if (!session) throw new Error("You must be logged in");
+
+  // 2) Authorization
+  const guestBookings = await getBookings(session.user.guestId);
+  const guestBookingIds = guestBookings.map((booking) => booking.id);
+
+  if (!guestBookingIds.includes(bookingId))
+    throw new Error("You can only update your own bookings");
+
+  // 3) Update data
+  const observations = formData.get("observations");
+  const updateData = {
+    numGuests: Number(formData.get("numGuests")),
+    observations: observations ? observations.slice(0, 1000) : "",
+  };
+
+  // 4) Mutation
+  const { error } = await supabase
+    .from("bookings")
+    .update(updateData)
+    .eq("id", bookingId)
+    .select()
+    .single();
+
+  // 5) Error handling
+  if (error) throw new Error("Booking could not be updated");
+
+  // 6) Revalidation
+  revalidatePath(`/account/reservations/edit/${bookingId}`);
+  revalidatePath("/account/reservations");
+
+  // 7) Redirect
+  redirect("/account/reservations");
 }
 
 export async function signInAction() {
