@@ -1,8 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 
-function TextExpander({ children }: { children: string }) {
+interface TextExpanderProps {
+  children: string;
+}
+
+function TextExpander({ children }: TextExpanderProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const displayText = isExpanded
     ? children

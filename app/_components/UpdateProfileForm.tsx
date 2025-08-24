@@ -1,6 +1,6 @@
 "use client";
 
-import { Guest } from "@/app/_lib/types";
+import { Guest } from "@/app/_lib/types/types";
 import { updateGuest } from "@/app/_lib/actions";
 import Image from "next/image";
 import SubmitButton from "./SubmitButton";
@@ -11,7 +11,7 @@ interface UpdateProfileFormProps {
 }
 
 function UpdateProfileForm({ children, guest }: UpdateProfileFormProps) {
-  const { fullName, email, nationality, nationalID, countryFlag } = guest;
+  const { fullName, email, nationalID, countryFlag } = guest;
 
   return (
     <form

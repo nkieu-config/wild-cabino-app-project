@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { UsersIcon } from "@heroicons/react/24/solid";
-import { CabinSelect } from "../_lib/types";
+import { CabinSelect } from "../_lib/types/types";
 
 function CabinCard({ cabin }: { cabin: CabinSelect }) {
   const { id, name, maxCapacity, regularPrice, discount, image } = cabin;
@@ -10,7 +10,7 @@ function CabinCard({ cabin }: { cabin: CabinSelect }) {
     <div className="border-primary-800 flex border">
       <div className="relative flex-1">
         <Image
-          src={image}
+          src={image ?? ""}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           alt={`Cabin ${name}`}
@@ -32,10 +32,10 @@ function CabinCard({ cabin }: { cabin: CabinSelect }) {
           </div>
 
           <p className="flex items-baseline justify-end gap-3">
-            {discount > 0 ? (
+            {(discount ?? 0) > 0 ? (
               <>
                 <span className="text-3xl font-[350]">
-                  ${regularPrice - discount}
+                  ${(regularPrice ?? 0) - (discount ?? 0)}
                 </span>
                 <span className="text-primary-600 font-semibold line-through">
                   ${regularPrice}

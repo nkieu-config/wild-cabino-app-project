@@ -1,18 +1,17 @@
 import Image from "next/image";
 import { EyeSlashIcon, MapPinIcon, UsersIcon } from "@heroicons/react/24/solid";
-import { Cabin } from "@/app/_lib/types";
-import TextExpander from "@/app/_components/TextExpander";
+import { Cabin } from "@/app/_lib/types/types";
+import TextExpander from "./TextExpander";
 
 function Cabins({ cabin }: { cabin: Cabin }) {
-  const { id, name, maxCapacity, regularPrice, discount, image, description } =
-    cabin;
+  const { name, maxCapacity, image, description } = cabin;
 
   return (
     <div className="border-primary-800 mb-24 grid grid-cols-[3fr_4fr] gap-20 border px-10 py-3">
       <div className="relative -translate-x-3 scale-[1.15]">
         <Image
           className="object-cover"
-          src={image}
+          src={image ?? ""}
           fill
           priority
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -26,7 +25,7 @@ function Cabins({ cabin }: { cabin: Cabin }) {
         </h3>
 
         <p className="text-primary-300 mb-10 text-lg">
-          <TextExpander>{description}</TextExpander>
+          <TextExpander>{description ?? ""}</TextExpander>
         </p>
 
         <ul className="mb-7 flex flex-col gap-4">

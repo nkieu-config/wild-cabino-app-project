@@ -8,7 +8,7 @@ import {
   isWithinInterval,
 } from "date-fns";
 import { DayPicker, DateRange } from "react-day-picker";
-import { Cabin, Settings } from "@/app/_lib/types";
+import { Cabin, Settings } from "@/app/_lib/types/types";
 import { useReservation } from "./ReservationContext";
 
 interface DateSelectorProps {
@@ -37,7 +37,7 @@ function DateSelector({ settings, bookedDates, cabin }: DateSelectorProps) {
     displayRange?.from && displayRange?.to
       ? differenceInDays(displayRange.to, displayRange.from)
       : 0;
-  const cabinPrice = numNights * (regularPrice - discount);
+  const cabinPrice = numNights * ((regularPrice ?? 0) - (discount ?? 0));
 
   const { minBookingLength, maxBookingLength } = settings;
 
@@ -48,8 +48,8 @@ function DateSelector({ settings, bookedDates, cabin }: DateSelectorProps) {
         mode="range"
         selected={displayRange}
         onSelect={setRange}
-        min={minBookingLength + 1}
-        max={maxBookingLength}
+        min={(minBookingLength ?? 0) + 1}
+        max={maxBookingLength ?? 0}
         fromMonth={new Date()}
         fromDate={new Date()}
         toYear={new Date().getFullYear() + 5}
@@ -65,9 +65,11 @@ function DateSelector({ settings, bookedDates, cabin }: DateSelectorProps) {
       <div className="bg-accent-500 text-primary-800 flex h-[72px] items-center justify-between px-8">
         <div className="flex items-baseline gap-6">
           <p className="flex items-baseline gap-2">
-            {discount > 0 ? (
+            {(discount ?? 0) > 0 ? (
               <>
-                <span className="text-2xl">${regularPrice - discount}</span>
+                <span className="text-2xl">
+                  ${(regularPrice ?? 0) - (discount ?? 0)}
+                </span>
                 <span className="text-primary-700 font-semibold line-through">
                   ${regularPrice}
                 </span>

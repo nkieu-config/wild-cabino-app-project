@@ -2,7 +2,7 @@
 
 import { useOptimistic } from "react";
 import { deleteBooking } from "@/app/_lib/actions";
-import { BookingWithCabin } from "@/app/_lib/types";
+import { BookingWithCabin } from "@/app/_lib/types/types";
 import ReservationCard from "./ReservationCard";
 
 interface ReservationListProps {

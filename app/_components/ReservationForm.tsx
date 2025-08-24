@@ -1,7 +1,7 @@
 "use client";
 
 import type { User } from "next-auth";
-import { Cabin, BookingData } from "@/app/_lib/types";
+import { Cabin, NewBookingData } from "@/app/_lib/types/types";
 import { useReservation } from "./ReservationContext";
 import { createBooking } from "../_lib/actions";
 import { differenceInDays } from "date-fns";
@@ -18,16 +18,18 @@ function ReservationForm({ cabin, user }: ReservationFormProps) {
   const { range, resetRange } = useReservation();
   const { maxCapacity, regularPrice, discount, id } = cabin;
 
-  const startDate = range?.from ? setLocalHoursToUTC(range.from) : undefined;
-  const endDate = range?.to ? setLocalHoursToUTC(range.to) : undefined;
+  const startDate = range?.from
+    ? setLocalHoursToUTC(range.from).toISOString()
+    : null;
+  const endDate = range?.to ? setLocalHoursToUTC(range.to).toISOString() : null;
 
   const numNights =
     startDate && endDate ? differenceInDays(endDate, startDate) : 0;
-  const cabinPrice = numNights * (regularPrice - discount);
+  const cabinPrice = numNights * ((regularPrice ?? 0) - (discount ?? 0));
 
-  const bookingData: BookingData = {
-    startDate: startDate!,
-    endDate: endDate!,
+  const bookingData: NewBookingData = {
+    startDate,
+    endDate,
     numNights,
     cabinPrice,
     cabinId: id,
@@ -46,6 +48,7 @@ function ReservationForm({ cabin, user }: ReservationFormProps) {
               referrerPolicy="no-referrer"
               className="rounded-full object-cover"
               fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               src={user.image ?? "/default-avatar.png"}
               alt={user.name ?? "Guest avatar"}
             />
@@ -72,11 +75,13 @@ function ReservationForm({ cabin, user }: ReservationFormProps) {
             <option value="" key="">
               Select number of guests...
             </option>
-            {Array.from({ length: maxCapacity }, (_, i) => i + 1).map((x) => (
-              <option value={x} key={x}>
-                {x} {x === 1 ? "guest" : "guests"}
-              </option>
-            ))}
+            {Array.from({ length: maxCapacity ?? 0 }, (_, i) => i + 1).map(
+              (x) => (
+                <option value={x} key={x}>
+                  {x} {x === 1 ? "guest" : "guests"}
+                </option>
+              ),
+            )}
           </select>
         </div>
 
