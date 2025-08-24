@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { auth } from "@/app/_lib/auth";
-import { getBookings } from "@/app/_lib/data-service";
+import { getBookings } from "@/app/_lib/db/data-service";
+import { BookingWithCabin } from "@/app/_lib/types/types";
 import ReservationList from "@/app/_components/ReservationList";
 
 export const metadata = {
@@ -11,7 +12,7 @@ async function Page() {
   const session = await auth();
 
   if (!session?.user?.guestId) return null;
-  const bookings = await getBookings(session.user.guestId);
+  const bookings: BookingWithCabin[] = await getBookings(session.user.guestId);
 
   return (
     <div>

@@ -1,18 +1,16 @@
 import { Suspense } from "react";
-import { getCabin } from "@/app/_lib/data-service";
-import { getCabins } from "@/app/_lib/data-service";
+import { getCabin } from "@/app/_lib/db/data-service";
+import { getCabins } from "@/app/_lib/db/data-service";
 import Reservation from "@/app/_components/Reservation";
 import Spinner from "@/app/_components/Spinner";
 import Cabins from "@/app/_components/Cabins";
 
-type PageProps = {
-  params: {
-    cabinId: string;
-  };
-};
+interface PageParams {
+  params: Promise<{ cabinId: string }>;
+}
 
-export async function generateMetadata({ params }: PageProps) {
-  const { cabinId } = params;
+export async function generateMetadata({ params }: PageParams) {
+  const { cabinId } = await params;
   const { name } = await getCabin(Number(cabinId));
   return { title: `Cabin ${name}` };
 }
@@ -22,8 +20,8 @@ export async function generateStaticParams() {
   return cabins.map((cabin) => ({ cabinId: String(cabin.id) }));
 }
 
-export default async function Page({ params }: PageProps) {
-  const { cabinId } = params;
+export default async function Page({ params }: PageParams) {
+  const { cabinId } = await params;
   const cabin = await getCabin(Number(cabinId));
 
   return (

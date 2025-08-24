@@ -1,19 +1,17 @@
 import SubmitButton from "@/app/_components/SubmitButton";
 import { updateBooking } from "@/app/_lib/actions";
-import { getBooking, getCabin } from "@/app/_lib/data-service";
+import { getBooking, getCabin } from "@/app/_lib/db/data-service";
 
-interface PageProps {
-  params: {
-    bookingId: string;
-  };
+interface PageParams {
+  params: Promise<{ bookingId: string }>;
 }
 
-export default async function Page({ params }: PageProps) {
-  const { bookingId } = params;
+export default async function Page({ params }: PageParams) {
+  const { bookingId } = await params;
   const { numGuests, observations, cabinId } = await getBooking(
     Number(bookingId),
   );
-  const { maxCapacity } = await getCabin(cabinId);
+  const { maxCapacity } = await getCabin(cabinId!);
 
   return (
     <div>
@@ -32,18 +30,20 @@ export default async function Page({ params }: PageProps) {
           <select
             name="numGuests"
             id="numGuests"
-            defaultValue={numGuests}
+            defaultValue={numGuests ?? ""}
             className="bg-primary-200 text-primary-800 w-full rounded-sm px-5 py-3 shadow-sm"
             required
           >
             <option value="" key="">
               Select number of guests...
             </option>
-            {Array.from({ length: maxCapacity }, (_, i) => i + 1).map((x) => (
-              <option value={x} key={x}>
-                {x} {x === 1 ? "guest" : "guests"}
-              </option>
-            ))}
+            {Array.from({ length: maxCapacity ?? 0 }, (_, i) => i + 1).map(
+              (x) => (
+                <option value={x} key={x}>
+                  {x} {x === 1 ? "guest" : "guests"}
+                </option>
+              ),
+            )}
           </select>
         </div>
 

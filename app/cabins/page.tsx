@@ -8,14 +8,15 @@ export const metadata = {
   title: "Cabins",
 };
 
-interface PageProps {
-  searchParams?: {
+interface PageParams {
+  searchParams: Promise<{
     capacity?: string;
-  };
+  }>;
 }
 
-function Page({ searchParams }: PageProps) {
-  const filter = searchParams?.capacity ?? "all";
+async function Page({ searchParams }: PageParams) {
+  const capacityParams = await searchParams;
+  const filter = capacityParams?.capacity ?? "all";
 
   return (
     <div>

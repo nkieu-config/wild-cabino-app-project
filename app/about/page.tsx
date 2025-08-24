@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import image1 from "@/public/about-1.jpg";
 import image2 from "@/public/about-2.jpg";
-import { getCabins } from "../_lib/data-service";
+import { getCabins } from "../_lib/db/data-service";
 
 export const revalidate = 86400;
 
@@ -62,7 +62,7 @@ async function Page() {
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           quality={80}
           placeholder="blur"
-          alt="Family that manages The Wild Oasis"
+          alt="Family that manages The Wild Cabino"
         />
       </div>
 
@@ -83,7 +83,7 @@ async function Page() {
             Cabino, blending the timeless beauty of the mountains with the
             personal touch only a family business can offer. Here, you&apos;re
             not just a guest; you&apos;re part of our extended family. So join
-            us at The Wild Oasis soon, where tradition meets tranquility, and
+            us at The Wild Cabino soon, where tradition meets tranquility, and
             every visit is like coming home.
           </p>
 

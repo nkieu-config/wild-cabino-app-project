@@ -1,14 +1,12 @@
 import { NextRequest } from "next/server";
-import { getBookedDatesByCabinId, getCabin } from "@/app/_lib/data-service";
+import { getBookedDatesByCabinId, getCabin } from "@/app/_lib/db/data-service";
 
 interface RouteParams {
-  params: {
-    cabinId: string;
-  };
+  params: Promise<{ cabinId: string }>;
 }
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
-  const { cabinId } = params;
+  const { cabinId } = await params;
 
   try {
     const [cabin, bookedDates] = await Promise.all([
