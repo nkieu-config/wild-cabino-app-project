@@ -1,6 +1,6 @@
 import NextAuth, { NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
-import { createGuest, getGuest } from "./data-service";
+import { createGuest, getGuest } from "./db/data-service";
 
 const authConfig: NextAuthConfig = {
   providers: [
@@ -10,10 +10,10 @@ const authConfig: NextAuthConfig = {
     }),
   ],
   callbacks: {
-    authorized({ auth, request }) {
+    authorized({ auth }) {
       return !!auth?.user;
     },
-    async signIn({ user, account, profile }) {
+    async signIn({ user }) {
       try {
         if (!user.email) return false;
         const existingGuest = await getGuest(user.email);
@@ -32,7 +32,7 @@ const authConfig: NextAuthConfig = {
         return false;
       }
     },
-    async session({ session, user }) {
+    async session({ session }) {
       if (!session.user.email) return session;
 
       const guest = await getGuest(session.user.email);

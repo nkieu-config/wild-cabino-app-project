@@ -2,10 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { auth, signIn, signOut } from "./auth";
-import { supabase } from "./supabase";
-import { getBookings } from "./data-service";
+import { supabase } from "./db/supabase";
+import { getBookings } from "./db/data-service";
 import { redirect } from "next/navigation";
-import { BookingData } from "./types";
+import { NewBooking, NewBookingData } from "./types/types";
 
 export async function updateGuest(formData: FormData) {
   const session = await auth();
@@ -32,17 +32,18 @@ export async function updateGuest(formData: FormData) {
 }
 
 export async function createBooking(
-  bookingData: BookingData,
+  bookingData: NewBookingData,
   formData: FormData,
 ) {
   const session = await auth();
   if (!session) throw new Error("You must be logged in");
 
-  const newBooking = {
+  const newBooking: NewBooking = {
     ...bookingData,
     guestId: session.user.guestId,
     numGuests: Number(formData.get("numGuests")),
-    observations: formData.get("observations")?.slice(0, 1000),
+    observations:
+      formData.get("observations")?.toString().slice(0, 1000) ?? null,
     extrasPrice: 0,
     totalPrice: bookingData.cabinPrice,
     isPaid: false,
@@ -55,7 +56,6 @@ export async function createBooking(
   if (error) throw new Error("Booking could not be created");
 
   revalidatePath(`/cabins/${bookingData.cabinId}`);
-
   redirect("/cabins/thankyou");
 }
 
@@ -97,7 +97,8 @@ export async function updateBooking(formData: FormData) {
   const observations = formData.get("observations");
   const updateData = {
     numGuests: Number(formData.get("numGuests")),
-    observations: observations ? observations.slice(0, 1000) : "",
+    observations:
+      typeof observations === "string" ? observations.slice(0, 1000) : "",
   };
 
   // 4) Mutation
