@@ -6,7 +6,7 @@ import SpinnerMini from "./SpinnerMini";
 
 interface DeleteReservationProps {
   bookingId: number;
-  onDelete: (bookingId: number) => Promise<void>;
+  onDelete: (bookingId: number) => void;
 }
 
 function DeleteReservation({ bookingId, onDelete }: DeleteReservationProps) {

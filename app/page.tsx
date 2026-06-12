@@ -9,8 +9,10 @@ export default function Page() {
         className="object-cover object-top"
         src={backgroundImage}
         fill
+        sizes="100vw"
         placeholder="blur"
         quality={80}
+        priority
         alt="Mountains and forests with two cabins"
       />
 

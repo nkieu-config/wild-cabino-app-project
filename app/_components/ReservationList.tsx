@@ -1,6 +1,6 @@
 "use client";
 
-import { useOptimistic } from "react";
+import { useOptimistic, useTransition } from "react";
 import { deleteBooking } from "@/app/_lib/actions";
 import { BookingWithCabin } from "@/app/_lib/types/types";
 import ReservationCard from "./ReservationCard";
@@ -10,6 +10,7 @@ interface ReservationListProps {
 }
 
 function ReservationList({ bookings }: ReservationListProps) {
+  const [, startTransition] = useTransition();
   const [optimisticBookings, optimisticDelete] = useOptimistic(
     bookings,
     (curBookings, bookingId) => {
@@ -17,9 +18,14 @@ function ReservationList({ bookings }: ReservationListProps) {
     },
   );
 
-  async function handleDelete(bookingId: number) {
-    optimisticDelete(bookingId);
-    await deleteBooking(bookingId);
+  function handleDelete(bookingId: number) {
+    startTransition(async () => {
+      optimisticDelete(bookingId);
+      const res = await deleteBooking(bookingId);
+      if (!res.success && res.message) {
+        alert(res.message);
+      }
+    });
   }
 
   return (
@@ -36,3 +42,4 @@ function ReservationList({ bookings }: ReservationListProps) {
 }
 
 export default ReservationList;
+

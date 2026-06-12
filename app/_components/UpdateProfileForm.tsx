@@ -1,5 +1,6 @@
 "use client";
 
+import { useActionState } from "react";
 import { Guest } from "@/app/_lib/types/types";
 import { updateGuest } from "@/app/_lib/actions";
 import Image from "next/image";
@@ -10,14 +11,28 @@ interface UpdateProfileFormProps {
   guest: Guest;
 }
 
+const initialState = { message: "", success: false };
+
 function UpdateProfileForm({ children, guest }: UpdateProfileFormProps) {
   const { fullName, email, nationalID, countryFlag } = guest;
+  const [state, formAction] = useActionState(updateGuest, initialState);
 
   return (
     <form
-      action={updateGuest}
+      action={formAction}
       className="bg-primary-900 flex flex-col gap-6 px-12 py-8 text-lg"
     >
+      {state?.message ? (
+        <div
+          className={`rounded-md p-4 text-sm ${
+            state.success
+              ? "bg-green-100 text-green-800"
+              : "bg-red-100 text-red-800"
+          }`}
+        >
+          {state.message}
+        </div>
+      ) : null}
       <div className="space-y-2">
         <label>Full name</label>
         <input

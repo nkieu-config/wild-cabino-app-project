@@ -1,5 +1,6 @@
 import { supabase } from "./supabase";
 import { notFound } from "next/navigation";
+import { unstable_cache } from "next/cache";
 import { eachDayOfInterval } from "date-fns";
 import type {
   Cabin,
@@ -27,19 +28,23 @@ export async function getCabin(id: number): Promise<Cabin> {
   return data;
 }
 
-export const getCabins = async function (): Promise<CabinSelect[]> {
-  const { data, error } = await supabase
-    .from("cabins")
-    .select("id, name, maxCapacity, regularPrice, discount, image")
-    .order("name");
+export const getCabins = unstable_cache(
+  async function (): Promise<CabinSelect[]> {
+    const { data, error } = await supabase
+      .from("cabins")
+      .select("id, name, maxCapacity, regularPrice, discount, image")
+      .order("name");
 
-  if (error) {
-    console.error(error);
-    throw new Error("Cabins could not be loaded");
-  }
+    if (error) {
+      console.error(error);
+      throw new Error("Cabins could not be loaded");
+    }
 
-  return data;
-};
+    return data;
+  },
+  ["cabins"],
+  { revalidate: 3600, tags: ["cabins"] }
+);
 
 export async function getGuest(email: string): Promise<Guest | null> {
   const { data } = await supabase
@@ -88,7 +93,7 @@ export async function getBookings(
 
 export async function getBookedDatesByCabinId(
   cabinId: number,
-): Promise<Date[]> {
+): Promise<string[]> {
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
   const todayISO = today.toISOString();
@@ -110,32 +115,36 @@ export async function getBookedDatesByCabinId(
     .filter((booking) => {
       return booking.startDate && booking.endDate;
     })
-    .map((booking) => {
+    .flatMap((booking) => {
       return eachDayOfInterval({
         start: new Date(booking.startDate!),
         end: new Date(booking.endDate!),
-      });
-    })
-    .flat();
+      }).map((date) => date.toISOString());
+    });
 
   return bookedDates;
 }
 
-export async function getSettings(): Promise<Settings> {
-  const { data, error } = await supabase.from("settings").select("*").single();
+export const getSettings = unstable_cache(
+  async function (): Promise<Settings> {
+    const { data, error } = await supabase.from("settings").select("*").single();
 
-  if (error || !data) {
-    console.error(error);
-    throw new Error("Settings could not be loaded");
-  }
+    if (error || !data) {
+      console.error(error);
+      throw new Error("Settings could not be loaded");
+    }
 
-  return data;
-}
+    return data;
+  },
+  ["settings"],
+  { revalidate: 3600, tags: ["settings"] }
+);
 
 export async function getCountries(): Promise<Country[]> {
   try {
     const res = await fetch(
       "https://restcountries.com/v2/all?fields=name,flag",
+      { cache: "force-cache" }
     );
     const countries = await res.json();
     return countries;

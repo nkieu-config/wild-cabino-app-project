@@ -7,7 +7,7 @@ import Link from "next/link";
 
 interface ReservationCardProps {
   booking: BookingWithCabin;
-  onDelete: (bookingId: number) => Promise<void>;
+  onDelete: (bookingId: number) => void;
 }
 
 export const formatDistanceFromNow = (dateStr: string) =>
@@ -71,7 +71,7 @@ function ReservationCard({ booking, onDelete }: ReservationCardProps) {
           <p className="text-accent-400 text-xl font-semibold">${totalPrice}</p>
           <p className="text-primary-300">&bull;</p>
           <p className="text-primary-300 text-lg">
-            {numGuests} guest{(numGuests ?? 0) > 1 && "s"}
+            {numGuests} guest{(numGuests ?? 0) > 1 ? "s" : ""}
           </p>
           <p className="text-primary-400 ml-auto text-sm">
             Booked {format(new Date(created_at), "EEE, MMM dd yyyy, p")}

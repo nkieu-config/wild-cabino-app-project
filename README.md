@@ -105,7 +105,8 @@ This application demonstrates mastery of modern Next.js and React patterns:
 ### ✅ Performance & Optimization
 
 - **Image Optimization** – Next.js Image component with automatic optimization
-- **Bundle Optimization** – Code splitting and dynamic imports
+- **Bundle Optimization** – Code splitting and dynamic imports with `next/dynamic`
+- **Vercel Best Practices** – Applied strict rendering optimizations and `optimizePackageImports`
 - **Caching Strategies** – Strategic revalidation with `revalidatePath`
 - **Loading States** – Proper loading UI with `Suspense` boundaries
 
@@ -123,6 +124,7 @@ This application demonstrates mastery of modern Next.js and React patterns:
 | **Tailwind CSS v4**  | Utility-first CSS framework     |
 | **React Day Picker** | Date selection component        |
 | **date-fns**         | Modern date utility library     |
+| **Zod**              | Schema validation library       |
 | **Heroicons**        | SVG icons library               |
 
 ---
@@ -189,6 +191,15 @@ npm run dev
 ```
 
 Visit [http://localhost:3000](http://localhost:3000) to view your application.
+
+### 7. **Test Production Build**
+
+To ensure everything works as expected in production:
+
+```bash
+npm run build
+npm start
+```
 
 ---
 

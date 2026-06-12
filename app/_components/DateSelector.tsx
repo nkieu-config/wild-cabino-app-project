@@ -14,7 +14,7 @@ import { useReservation } from "./ReservationContext";
 interface DateSelectorProps {
   settings: Settings;
   cabin: Cabin;
-  bookedDates: Date[];
+  bookedDates: string[];
 }
 
 function isAlreadyBooked(range: DateRange | undefined, datesArr: Date[]) {
@@ -29,8 +29,10 @@ function isAlreadyBooked(range: DateRange | undefined, datesArr: Date[]) {
 
 function DateSelector({ settings, bookedDates, cabin }: DateSelectorProps) {
   const { range, setRange, resetRange } = useReservation();
+  
+  const parsedBookedDates = bookedDates.map((d) => new Date(d));
 
-  const displayRange = isAlreadyBooked(range, bookedDates) ? undefined : range;
+  const displayRange = isAlreadyBooked(range, parsedBookedDates) ? undefined : range;
 
   const { regularPrice, discount } = cabin;
   const numNights =
@@ -58,7 +60,7 @@ function DateSelector({ settings, bookedDates, cabin }: DateSelectorProps) {
         hideNavigation
         disabled={(curDate) =>
           isPast(curDate) ||
-          bookedDates.some((date) => isSameDay(date, curDate))
+          parsedBookedDates.some((date) => isSameDay(date, curDate))
         }
       />
 

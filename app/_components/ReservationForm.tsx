@@ -1,5 +1,6 @@
 "use client";
 
+import { useActionState } from "react";
 import type { User } from "next-auth";
 import { Cabin, NewBookingData } from "@/app/_lib/types/types";
 import { useReservation } from "./ReservationContext";
@@ -14,8 +15,10 @@ interface ReservationFormProps {
   user: User;
 }
 
+const initialState = { message: "", success: false };
+
 function ReservationForm({ cabin, user }: ReservationFormProps) {
-  const { range, resetRange } = useReservation();
+  const { range } = useReservation();
   const { maxCapacity, regularPrice, discount, id } = cabin;
 
   const startDate = range?.from
@@ -36,6 +39,10 @@ function ReservationForm({ cabin, user }: ReservationFormProps) {
   };
 
   const createBookingWithData = createBooking.bind(null, bookingData);
+  const [state, formAction] = useActionState(
+    createBookingWithData,
+    initialState,
+  );
 
   return (
     <div className="scale-[1.01]">
@@ -59,11 +66,13 @@ function ReservationForm({ cabin, user }: ReservationFormProps) {
 
       <form
         className="bg-primary-900 flex flex-col gap-6 px-16 py-15 text-lg"
-        action={async (formData) => {
-          await createBookingWithData(formData);
-          resetRange();
-        }}
+        action={formAction}
       >
+        {state?.message ? (
+          <div className="bg-red-100 text-red-800 rounded-md p-4 text-sm">
+            {state.message}
+          </div>
+        ) : null}
         <div className="flex flex-col gap-1 space-y-2">
           <label htmlFor="numGuests">How many guests?</label>
           <select

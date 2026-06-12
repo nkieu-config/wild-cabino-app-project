@@ -10,6 +10,9 @@ const nextConfig: NextConfig = {
       new URL("https://lh3.googleusercontent.com/**"),
     ],
   },
+  experimental: {
+    optimizePackageImports: ["date-fns", "@heroicons/react"],
+  },
 };
 
 export default nextConfig;
